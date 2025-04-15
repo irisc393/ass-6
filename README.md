@@ -38,10 +38,32 @@ Target variable is 'num'
 Since the output is categorical, classification algorithms such as Logistic Regression, K-Nearest Neighbors, or Random Forests can be applied. These models learn patterns in the data to accurately predict the health status of new, unseen patients based on their clinical indicators.
 
 #2
+y = heart_disease.data.targets
+sns.countplot(
+    data=y,
+    x='num'
+)
+
+plt.show()
+
+The transformation is needed to be apply, since we need let 0 represent no heart dieases and 1–4 represent have heart disease.
 
 #3
+print(df.shape)
+print(df.dtypes)
+print(df.describe())
+- There are 303 observations and 14 features(13 features + target 'num') with 9 numerical and 5 categorical
+- Missing values exist in ca (4 missing) and thal (2 missing).
+- The dataset contain the wide for blood pressure(trestbps) measurements, showing a high variability. And Cholesterol(chol) also has a wide spread, as 126 to 564, since 564 is much higher than the 75th percentile (275) suggesting possible outliers.
+- Variables like sex, fbs, and exang appear to be binary (as the values of 0 or 1)
 
 #4
+df['target'] = df['num'].apply(lambda x: 1 if x > 0 else 0)
+print(df['target'].value_counts())
+X = heart_disease.data.features
+df = X.copy()
+df['num'] = y_binary
+
 
 #5
 plt.figure(figsize=(12, 8))
@@ -67,8 +89,37 @@ print("Number of observations after dropping missing values:", df.shape[0])
 - We dropped all rows containing missing values. After this step, the dataset contains 297 observations.
 
 #7
+X_numerical = X_train.drop(columns=['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'ca', 'thal'])
 
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X_numerical)
+
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_scaled)
+
+kmeans = KMeans(n_clusters=2, random_state=1)
+clusters = kmeans.fit_predict(X_scaled)
+
+plt.figure(figsize=(8,6))
+plt.scatter(X_pca[:, 0], X_pca[:, 1], alpha=0.7,c=clusters, cmap='viridis')
+plt.xlabel("PC1")
+plt.ylabel("PC2")
+plt.title("PCA Sub-group Visualization")
+plt.grid()
+plt.show()
+
+- We performed PCA using only numerical features to explore underlying sub-groups in the dataset without using labels or categorical variables. The resulting scatter plot shows a mild spread in the data, which may suggest some underlying structure, although no clearly defined clusters appear.
+  
 #8
+X = df.drop(columns='num')
+y = df['num']
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=1, stratify=y
+)
+
+print("Training set size:", X_train.shape)
+print("Testing set size:", X_test.shape)
 
 #9
 - For this assignment, I chose **Logistic Regression** and **K-Nearest Neighbors (KNN)** as our two classification models.
@@ -168,8 +219,31 @@ best_model = grid.best_estimator_
 - This approach reduces model complexity and may improve generalization by removing irrelevant or redundant features.
 
 #13
+# 1. Logistic
+y_pred_lr = log_reg.predict(X_test)
+accuracy_lr = accuracy_score(y_test, y_pred_lr)
+f1_lr = f1_score(y_test, y_pred_lr)
 
+# 2. KNN
+y_pred_knn = knn.predict(X_test)
+accuracy_knn = accuracy_score(y_test, y_pred_knn)
+f1_knn = f1_score(y_test, y_pred_knn)
 
+# 3. Logistic Regression with SelectKBest
+y_pred_kbest = best_model.predict(X_test)
+accuracy_kbest = accuracy_score(y_test, y_pred_kbest)
+f1_kbest = f1_score(y_test, y_pred_kbest)
+
+print(f"Logistic Regression (All Features): Accuracy = {accuracy_lr:.3f}, F1 Score = {f1_lr:.3f}")
+print(f"KNN (k=5):Accuracy = {accuracy_knn:.3f}, F1 Score = {f1_knn:.3f}")
+print(f"LogReg + KBest:Accuracy = {accuracy_kbest:.3f}, F1 Score = {f1_kbest:.3f}")
+
+**Findings:**
+1. Logistic Regression using all features achieved an accuracy of **0.856** and an F1 score of **0.835**, making it the best-performing model.
+2. K-Nearest Neighbors performed significantly worse with an accuracy of **0.611** and F1 score of **0.507**, suggesting that it's more sensitive to noisy or high-dimensional data.
+
+**Impact of Feature Selection:**
+Feature selection using `SelectKBest` slightly reduced performance (accuracy = **0.867**, F1 = **0.846**) but helped simplify the model. This can improve generalization and reduce overfitting, especially in larger datasets.
 
 #14
 for feature, coef in zip(selected_features, log_reg_kbest.coef_[0]):
