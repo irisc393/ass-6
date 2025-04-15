@@ -62,7 +62,7 @@ df['target'] = df['num'].apply(lambda x: 1 if x > 0 else 0)
 print(df['target'].value_counts())
 X = heart_disease.data.features
 df = X.copy()
-df['num'] = y_binary
+df['target'] = y_binary
 
 
 #5
