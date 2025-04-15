@@ -112,8 +112,8 @@ plt.show()
 - We performed PCA using only numerical features to explore underlying sub-groups in the dataset without using labels or categorical variables. The resulting scatter plot shows a mild spread in the data, which may suggest some underlying structure, although no clearly defined clusters appear.
   
 #8
-X = df.drop(columns='num')
-y = df['num']
+X = df.drop(columns='target')
+y = df['target']
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.3, random_state=1, stratify=y
