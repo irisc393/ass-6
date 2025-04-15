@@ -89,7 +89,8 @@ print("Number of observations after dropping missing values:", df.shape[0])
 - We dropped all rows containing missing values. After this step, the dataset contains 297 observations.
 
 #7
-X_numerical = X_train.drop(columns=['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'ca', 'thal'])
+numerical_cols = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak']
+X_numerical = df[numerical_cols]
 
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X_numerical)
