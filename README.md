@@ -46,7 +46,7 @@ sns.countplot(
 
 plt.show()
 
-The transformation is needed to be apply, since we need let 0 represent no heart dieases and 1–4 represent have heart disease.
+The transformation is needed to be apply, since we need let 0 represent no heart dieases and 1–4 represent have heart disease. Also, there are some missing data, therefore the transformation is needed.
 
 #3
 print(df.shape)
