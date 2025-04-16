@@ -220,17 +220,17 @@ best_model = grid.best_estimator_
 - This approach reduces model complexity and may improve generalization by removing irrelevant or redundant features.
 
 #13
-# 1. Logistic
+- 1. Logistic
 y_pred_lr = log_reg.predict(X_test)
 accuracy_lr = accuracy_score(y_test, y_pred_lr)
 f1_lr = f1_score(y_test, y_pred_lr)
 
-# 2. KNN
+- 2. KNN
 y_pred_knn = knn.predict(X_test)
 accuracy_knn = accuracy_score(y_test, y_pred_knn)
 f1_knn = f1_score(y_test, y_pred_knn)
 
-# 3. Logistic Regression with SelectKBest
+- 3. Logistic Regression with SelectKBest
 y_pred_kbest = best_model.predict(X_test)
 accuracy_kbest = accuracy_score(y_test, y_pred_kbest)
 f1_kbest = f1_score(y_test, y_pred_kbest)
