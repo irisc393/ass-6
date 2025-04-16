@@ -275,79 +275,38 @@ for feature, coef in zip(selected_features, best_model.named_steps['logreg'].coe
 - **thalach (Maximum heart rate achieved)** has a negative coefficient (−0.1621), suggesting that higher maximum heart rates are associated with a lower likelihood of heart disease. 
 
 #15
-
-# 1. Prepare data (keep only numerical features)
 numerical_cols = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak']
 X_numerical = df[numerical_cols]
 
-# 2. Scale features (critical for PCA/K-Means)
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X_numerical)
 
-# 3. Reduce to 2D with PCA and cluster
 pca = PCA(n_components=2)
 X_pca = pca.fit_transform(X_scaled)
-kmeans = KMeans(n_clusters=2, random_state=1)  # Fixed random_state
+kmeans = KMeans(n_clusters=2, random_state=1)  
 clusters = kmeans.fit_predict(X_pca)
 
-# 4. Add cluster as a new feature to original data
 X_with_cluster = X.copy()
-X_with_cluster['cluster'] = clusters  # New feature
+X_with_cluster['cluster'] = clusters  
 
-# 5. Train-test split (stratified)
 X_train, X_test, y_train, y_test = train_test_split(
     X_with_cluster, y, 
     test_size=0.3, 
-    random_state=1,  # Fixed random_state
-    stratify=y  # Preserve class balance
+    random_state=1,  
+    stratify=y  
 )
 
-# 6. Train Logistic Regression with cluster feature
 log_reg = LogisticRegression(max_iter=1000, random_state=42)
 log_reg.fit(X_train, y_train)
 
-# 7. Evaluate
 y_pred = log_reg.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
-f1 = f1_score(y_test, y_pred)  # Fixed metric name
+f1 = f1_score(y_test, y_pred) 
 
 print(f"Logistic Regression + Cluster Feature:")
 print(f"- Accuracy: {accuracy:.3f}")
 print(f"- F1-score: {f1:.3f}")
 
-
-- Standardize
-X_numerical = df.drop(columns=['num', 'sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'ca', 'thal'])
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X_numerical)
-
-- PCA & Clustering
-pca = PCA(n_components=2)
-X_pca = pca.fit_transform(X_scaled)
-
-kmeans = KMeans(n_clusters=2, random_state=1)
-clusters = kmeans.fit_predict(X_pca)
-
-- Add cluster to original
-X_clustered = X.copy()
-X_clustered['cluster'] = clusters
-
-- Train-test split
-X_train_c, X_test_c, y_train_c, y_test_c = train_test_split(
-    X_clustered, y, test_size=0.3, random_state=1, stratify=y
-)
-
-- Train logistic reg with the added cluster 
-log_reg_cluster = LogisticRegression(max_iter=1000)
-log_reg_cluster.fit(X_train_c, y_train_c)
-
-- acc and f1
-y_pred_cluster = log_reg_cluster.predict(X_test_c)
-accuracy_cluster = accuracy_score(y_test_c, y_pred_cluster)
-f1_cluster = f1_score(y_test_c, y_pred_cluster)
-
-print("LogReg with Cluster Feature - Accuracy:", round(accuracy_cluster, 3))
-print("LogReg with Cluster Feature - F1 Score:", round(f1_cluster, 3))
 
 - We explored a subgroup-based strategy to enhance classifier performance by incorporating unsupervised structure from the data. Additionally, we applied PCA followed by KMeans clustering to identify potential latent sub-groups within the dataset.
 
