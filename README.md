@@ -185,6 +185,26 @@ best_k = grid_search.best_params_['n_neighbors']
 print(best_k)
 
 - Logistic Regression has few hyperparameters, so no tuning parameters was applied. For KNN, we identified the best-performing value as **k=5**.
+- 
+
+
+from sklearn.linear_model import LogisticRegression
+
+# Define parameter grid for Logistic Regression
+param_grid_lr = {
+    'C': [0.01, 0.1, 1, 10, 100],  
+    'penalty': ['l2'],              
+    'solver': ['liblinear']          
+}
+
+# GridSearchCV for Logistic Regression
+lr = LogisticRegression(max_iter=1000, random_state=42)
+grid_lr = GridSearchCV(lr, param_grid_lr, cv=5)
+grid_lr.fit(X_train_scaled, y_train)  # Use scaled data for consistency
+
+print("Best LR Parameters:", grid_lr.best_params_)
+print("LR Training Accuracy:", grid_lr.best_score_)
+
 
 #12
 selector = SelectKBest(score_func=f_classif, k=8)
