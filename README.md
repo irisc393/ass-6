@@ -192,7 +192,6 @@ grid_lr = GridSearchCV(lr, param_grid_lr, cv=5)
 grid_lr.fit(X_train_scaled, y_train)  # Use scaled data for consistency
 
 print("Best LR Parameters:", grid_lr.best_params_)
-print("LR Training Accuracy:", grid_lr.best_score_)
 
 - Logistic Regression has tuning parameters is at **C=0.01**. For KNN, we identified the best-performing value as **K=7**.
 
