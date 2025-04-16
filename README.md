@@ -237,24 +237,29 @@ print("Test accuracy:", best_model.score(X_test, y_test))
 
 
 #13
+X_test_scaled = scaler.transform(X_test)
+
 - 1. Logistic
-y_pred_lr = lr.predict(X_test)
+y_pred_lr = grid_lr.best_estimator_.predict(X_test_scaled)
 accuracy_lr = accuracy_score(y_test, y_pred_lr)
 f1_lr = f1_score(y_test, y_pred_lr)
 
 - 2. KNN
-y_pred_knn = knn.predict(X_test)
+knn = KNeighborsClassifier(n_neighbors=7)  # use best k=7 we get from (11)
+knn.fit(X_train_scaled, y_train) 
+y_pred_knn = knn.predict(X_test_scaled)
 accuracy_knn = accuracy_score(y_test, y_pred_knn)
 f1_knn = f1_score(y_test, y_pred_knn)
 
-- 3. Logistic Regression with SelectKBest
+- 3. Logistic Regression with KBest
 y_pred_kbest = best_model.predict(X_test)
 accuracy_kbest = accuracy_score(y_test, y_pred_kbest)
 f1_kbest = f1_score(y_test, y_pred_kbest)
 
-print(f"Logistic Regression (All Features): Accuracy = {accuracy_lr:.3f}, F1 Score = {f1_lr:.3f}")
-print(f"KNN (k=7):Accuracy = {accuracy_knn:.3f}, F1 Score = {f1_knn:.3f}")
-print(f"LogReg + KBest:Accuracy = {accuracy_kbest:.3f}, F1 Score = {f1_kbest:.3f}")
+
+print(f"- Logistic Regression: Accuracy = {accuracy_lr:.3f}, F1 = {f1_lr:.3f}")
+print(f"- KNN (k=7): Accuracy = {accuracy_knn:.3f}, F1 = {f1_knn:.3f}")
+print(f"- LR + KBest: Accuracy = {accuracy_kbest:.3f}, F1 = {f1_kbest:.3f}")
 
 **Findings:**
 1. Logistic Regression using all features achieved an accuracy of **0.856** and an F1 score of **0.835**, making it the best-performing model.
