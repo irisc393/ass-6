@@ -320,9 +320,9 @@ print("LogReg with Cluster Feature - F1 Score:", round(f1_cluster, 3))
 
 | Model                        | Accuracy | F1 Score |
 |-----------------------------|----------|----------|
-| Logistic Regression         | 0.856    | 0.835    |
-| KNN                         | 0.611    | 0.507    |
-| LogReg + KBest              | 0.867    | 0.846    |
+| Logistic Regression         | 0.844    | 0.821    |
+| KNN                         | 0.833    | 0.805    |
+| LogReg + KBest              | 0.856    | 0.831    |
 | **LogReg + Cluster Feature**| 0.856    | 0.835    |
 
 ---
