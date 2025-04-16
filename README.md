@@ -170,55 +170,31 @@ The F1 score is more informative than accuracy when both types of errors matter,
 
 
 #11
-log_reg = LogisticRegression(max_iter=1000)
-log_reg.fit(X_train, y_train)
-
-knn = KNeighborsClassifier(n_neighbors=5)
-knn.fit(X_train, y_train)
-
-param_grid = {'n_neighbors': range(1, 21)}
-knn = KNeighborsClassifier()
-grid_search = GridSearchCV(knn, param_grid, cv=5)
-grid_search.fit(X_train, y_train)
-
-best_k = grid_search.best_params_['n_neighbors']
-print(best_k)
-
-- Logistic Regression has few hyperparameters, so no tuning parameters was applied. For KNN, we identified the best-performing value as **k=5**.
-- 
-
-from sklearn.preprocessing import StandardScaler
-
-# Scale features (required for KNN)
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 
-# Tune KNN (your existing code + scaling)
 param_grid = {'n_neighbors': range(1, 21)}
 knn = KNeighborsClassifier()
 grid_search = GridSearchCV(knn, param_grid, cv=5)
-grid_search.fit(X_train_scaled, y_train)  # Use scaled data!
+grid_search.fit(X_train_scaled, y_train) 
 
 best_k = grid_search.best_params_['n_neighbors']
-print(f"Best k: {best_k}")  # Likely k=5 (as you found)
+print(f"Best k: {best_k}")  
 
-
-from sklearn.linear_model import LogisticRegression
-
-# Define parameter grid for Logistic Regression
 param_grid_lr = {
     'C': [0.01, 0.1, 1, 10, 100],  
     'penalty': ['l2'],              
     'solver': ['liblinear']          
 }
 
-# GridSearchCV for Logistic Regression
 lr = LogisticRegression(max_iter=1000, random_state=42)
 grid_lr = GridSearchCV(lr, param_grid_lr, cv=5)
 grid_lr.fit(X_train_scaled, y_train)  # Use scaled data for consistency
 
 print("Best LR Parameters:", grid_lr.best_params_)
 print("LR Training Accuracy:", grid_lr.best_score_)
+
+- Logistic Regression has tuning parameters is at **C=0.01**. For KNN, we identified the best-performing value as **K=7**.
 
 
 #12
@@ -230,14 +206,12 @@ selected_mask = selector.get_support()
 selected_features = X_train.columns[selected_mask]
 print("Selected features:", selected_features.tolist())
 
-# 2. Pipeline with Tuning (fixed syntax and added scaling)
 pipeline = Pipeline([
     ('scaler', StandardScaler()),  # Add scaling for Logistic Regression
     ('select', SelectKBest(score_func=f_classif, k=8)),
     ('logreg', LogisticRegression(max_iter=1000, random_state=42))
 ])
 
-# Parameter grid (tune C and add penalty if needed)
 param_grid = {
     'select__k': [5, 8, 10],  # Also tune number of features
     'logreg__C': [0.01, 0.1, 1, 10, 100],
@@ -245,7 +219,6 @@ param_grid = {
     'logreg__solver': ['liblinear']  # Required for L1/L2
 }
 
-# GridSearchCV with fixed random_state
 grid = GridSearchCV(
     pipeline, 
     param_grid, 
@@ -254,31 +227,14 @@ grid = GridSearchCV(
 )
 grid.fit(X_train, y_train)
 
-# Best model and parameters
 print("Best parameters:", grid.best_params_)
 best_model = grid.best_estimator_
 print("Test accuracy:", best_model.score(X_test, y_test))
 
 
-pipeline = Pipeline([
-    ('select', SelectKBest(score_func=f_classif, k=8)),
-    ('logreg', LogisticRegression(max_iter=1000))
-])
-
-param_grid = {
-    'logreg__C': [0.01, 0.1, 1, 10, 100]
-}
-
-grid = GridSearchCV(pipeline, param_grid, cv=5)
-grid.fit(X_train, y_train)
-
-- best model & c
-print("Best C value:", grid.best_params_['logreg__C'])
-best_model = grid.best_estimator_
-
 - We performed feature selection using `SelectKBest` with the ANOVA F-test (`f_classif`) to extract the 8 most predictive features from the training data. The selected features we choose includes: sex, cp (chest pain type), thalach (max heart rate), exang (exercise-induced angina), oldpeak, slope, ca, thal
 
-- Using only these selected features, we trained a third classifier Logistic Regression, and the best-performing value of `C` is 1, and the final classifier was trained using this optimal parameter.
+- Using only these selected features, we trained a third classifier Logistic Regression, and the best-performing value of `C` is 0.01, and the final classifier was trained using this optimal parameter.
 
 
 #13
