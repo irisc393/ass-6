@@ -231,13 +231,10 @@ grid.fit(X_train, y_train)
 print("Best C value:", grid.best_params_['logreg__C'])
 best_model = grid.best_estimator_
 
-- We performed feature selection using `SelectKBest` with the ANOVA F-test (`f_classif`) to extract the 8 most predictive features from the training data. The selected features includes: sex, cp (chest pain type), thalach (max heart rate), exang (exercise-induced angina), oldpeak, slope, ca, thal
+- We performed feature selection using `SelectKBest` with the ANOVA F-test (`f_classif`) to extract the 8 most predictive features from the training data. The selected features we choose includes: sex, cp (chest pain type), thalach (max heart rate), exang (exercise-induced angina), oldpeak, slope, ca, thal
 
-- Using only these selected features, we trained a third classifier Logistic Regression.
+- Using only these selected features, we trained a third classifier Logistic Regression, and the best-performing value of `C` is 1, and the final classifier was trained using this optimal parameter.
 
-- The best-performing value of `C` is 1, and the final classifier was trained using this optimal parameter.
-
-- This approach reduces model complexity and may improve generalization by removing irrelevant or redundant features.
 
 #13
 - 1. Logistic
