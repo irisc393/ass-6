@@ -187,6 +187,21 @@ print(best_k)
 - Logistic Regression has few hyperparameters, so no tuning parameters was applied. For KNN, we identified the best-performing value as **k=5**.
 - 
 
+from sklearn.preprocessing import StandardScaler
+
+# Scale features (required for KNN)
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+
+# Tune KNN (your existing code + scaling)
+param_grid = {'n_neighbors': range(1, 21)}
+knn = KNeighborsClassifier()
+grid_search = GridSearchCV(knn, param_grid, cv=5)
+grid_search.fit(X_train_scaled, y_train)  # Use scaled data!
+
+best_k = grid_search.best_params_['n_neighbors']
+print(f"Best k: {best_k}")  # Likely k=5 (as you found)
+
 
 from sklearn.linear_model import LogisticRegression
 
