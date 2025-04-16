@@ -230,6 +230,36 @@ selected_mask = selector.get_support()
 selected_features = X_train.columns[selected_mask]
 print("Selected features:", selected_features.tolist())
 
+# 2. Pipeline with Tuning (fixed syntax and added scaling)
+pipeline = Pipeline([
+    ('scaler', StandardScaler()),  # Add scaling for Logistic Regression
+    ('select', SelectKBest(score_func=f_classif, k=8)),
+    ('logreg', LogisticRegression(max_iter=1000, random_state=42))
+])
+
+# Parameter grid (tune C and add penalty if needed)
+param_grid = {
+    'select__k': [5, 8, 10],  # Also tune number of features
+    'logreg__C': [0.01, 0.1, 1, 10, 100],
+    'logreg__penalty': ['l1', 'l2'],  # Test both penalties
+    'logreg__solver': ['liblinear']  # Required for L1/L2
+}
+
+# GridSearchCV with fixed random_state
+grid = GridSearchCV(
+    pipeline, 
+    param_grid, 
+    cv=5, 
+   
+)
+grid.fit(X_train, y_train)
+
+# Best model and parameters
+print("Best parameters:", grid.best_params_)
+best_model = grid.best_estimator_
+print("Test accuracy:", best_model.score(X_test, y_test))
+
+
 pipeline = Pipeline([
     ('select', SelectKBest(score_func=f_classif, k=8)),
     ('logreg', LogisticRegression(max_iter=1000))
