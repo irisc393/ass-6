@@ -163,8 +163,8 @@ $$
 \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
 $$
 
-- **Precision** = $ \frac{TP}{TP + FP} $: How many predicted positives are actually correct.  
-- **Recall** = $ \frac{TP}{TP + FN} $: How many actual positives were correctly predicted.
+- **Precision** = $$ \frac{TP}{TP + FP} $$: How many predicted positives are actually correct.  
+- **Recall** = $$ \frac{TP}{TP + FN} $$: How many actual positives were correctly predicted.
 
 The F1 score is more informative than accuracy when both types of errors matter, which is important in medical contexts.
 
