@@ -264,9 +264,7 @@ print(f"- LR + KBest: Accuracy = {accuracy_kbest:.3f}, F1 = {f1_kbest:.3f}")
 **Findings:**
 1. Logistic Regression using all features achieved an accuracy of **0.844** and an F1 score of **0.821**, making it the best-performing model.
 2. K-Nearest Neighbors performed significantly worse with an accuracy of **0.833** and F1 score of **0.805**, suggesting that it's more sensitive to noisy or high-dimensional data.
-
-**Impact of Feature Selection:**
-Feature selection using `KBest` slightly reduced performance (accuracy = **0.856**, F1 = **0.831**) but helped simplify the model. This can improve generalization and reduce overfitting, especially in larger datasets.
+3. Feature selection using `KBest` slightly reduced performance (accuracy = **0.856**, F1 = **0.831**) but helped simplify the model. This can improve generalization and reduce overfitting, especially in larger datasets.
 
 #14
 for feature, coef in zip(selected_features, log_reg_kbest.coef_[0]):
