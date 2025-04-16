@@ -253,7 +253,7 @@ best_model = grid.best_estimator_
 
 #13
 - 1. Logistic
-y_pred_lr = log_reg.predict(X_test)
+y_pred_lr = lr.predict(X_test)
 accuracy_lr = accuracy_score(y_test, y_pred_lr)
 f1_lr = f1_score(y_test, y_pred_lr)
 
@@ -268,7 +268,7 @@ accuracy_kbest = accuracy_score(y_test, y_pred_kbest)
 f1_kbest = f1_score(y_test, y_pred_kbest)
 
 print(f"Logistic Regression (All Features): Accuracy = {accuracy_lr:.3f}, F1 Score = {f1_lr:.3f}")
-print(f"KNN (k=5):Accuracy = {accuracy_knn:.3f}, F1 Score = {f1_knn:.3f}")
+print(f"KNN (k=7):Accuracy = {accuracy_knn:.3f}, F1 Score = {f1_knn:.3f}")
 print(f"LogReg + KBest:Accuracy = {accuracy_kbest:.3f}, F1 Score = {f1_kbest:.3f}")
 
 **Findings:**
