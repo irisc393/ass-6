@@ -275,6 +275,47 @@ for feature, coef in zip(selected_features, best_model.named_steps['logreg'].coe
 - **thalach (Maximum heart rate achieved)** has a negative coefficient (−0.1621), suggesting that higher maximum heart rates are associated with a lower likelihood of heart disease. 
 
 #15
+
+# 1. Prepare data (keep only numerical features)
+numerical_cols = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak']
+X_numerical = df[numerical_cols]
+
+# 2. Scale features (critical for PCA/K-Means)
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X_numerical)
+
+# 3. Reduce to 2D with PCA and cluster
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_scaled)
+kmeans = KMeans(n_clusters=2, random_state=1)  # Fixed random_state
+clusters = kmeans.fit_predict(X_pca)
+
+# 4. Add cluster as a new feature to original data
+X_with_cluster = X.copy()
+X_with_cluster['cluster'] = clusters  # New feature
+
+# 5. Train-test split (stratified)
+X_train, X_test, y_train, y_test = train_test_split(
+    X_with_cluster, y, 
+    test_size=0.3, 
+    random_state=1,  # Fixed random_state
+    stratify=y  # Preserve class balance
+)
+
+# 6. Train Logistic Regression with cluster feature
+log_reg = LogisticRegression(max_iter=1000, random_state=42)
+log_reg.fit(X_train, y_train)
+
+# 7. Evaluate
+y_pred = log_reg.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)  # Fixed metric name
+
+print(f"Logistic Regression + Cluster Feature:")
+print(f"- Accuracy: {accuracy:.3f}")
+print(f"- F1-score: {f1:.3f}")
+
+
 - Standardize
 X_numerical = df.drop(columns=['num', 'sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'ca', 'thal'])
 scaler = StandardScaler()
