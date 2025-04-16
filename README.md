@@ -267,15 +267,12 @@ print(f"- LR + KBest: Accuracy = {accuracy_kbest:.3f}, F1 = {f1_kbest:.3f}")
 3. Feature selection using `KBest` slightly reduced performance (accuracy = **0.856**, F1 = **0.831**) but helped simplify the model. This can improve generalization and reduce overfitting, especially in larger datasets.
 
 #14
-for feature, coef in zip(selected_features, log_reg_kbest.coef_[0]):
+for feature, coef in zip(selected_features, best_model.named_steps['logreg'].coef_[0]):
     print(f"{feature}: {coef:.4f}")
 
-**Sex (1 = male):**
-- The feature sex has the largest positive coefficient (1.0147), indicating that being male is strongly associated with a higher risk of heart disease in this dataset.
+- **thal (Thalassemia)** has the highest positive coefficient (0.2810) among all predictors, shows that patients with abnormal thalassemia levels are more likely to have heart disease. 
 
-**Exang (Exercise-Induced Angina):**
-- With a high positive coefficient (0.8416), patients who experience exercise-induced chest pain are more likely to have heart disease, which is consistent with clinical intuition.
-
+- **thalach (Maximum heart rate achieved)** has a negative coefficient (−0.1621), suggesting that higher maximum heart rates are associated with a lower likelihood of heart disease. 
 
 #15
 - Standardize
